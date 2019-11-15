@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Chicago Parks</title>
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css' rel='stylesheet' />
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 50%;
+    }
+
+    #map:hover {
+      transform: scale(0.4);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiYWRhcmlhbiIsImEiOiJjam4zdDd1dTQwamthM3BxZ2p0dHRicjMyIn0.EaQADwzB68lFNnJE6UbG8g';
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/adarian/ck2zip4c1036f1co63355p7he',
+      center: [-87.661557, 41.893748],
+      zoom: 10.7
+    });
+
+    map.on('click', function (e) {
+      var features = map.queryRenderedFeatures(e.point, {
+        layers: ['chicago-parks']
+      });
+
+      if (!features.length) {
+        return;
+      }
+
+      var feature = features[0];
+
+      var popup = new mapboxgl.Popup({
+        offset: [0, -15]
+      })
+      .setLngLat(feature.geometry.coordinates)
+      .setHTML('<h3>' + feature.properties.title + '</h3><p>' + feature.properties.description + '</p>')
+      .addTo(map);
+    });
+
+    map.on('load', () => {
+      console.log('Hi Bob!');
+    });
+  </script>
+</body>
+
+</html>
